@@ -2,7 +2,7 @@ function getError(option, xhr) {
   const msg = `cannot post ${option.action} ${xhr.status}'`;
   const err = new Error(msg);
   err.status = xhr.status;
-  err.method = 'post';
+  err.method = "post";
   err.url = option.action;
   return err;
 }
@@ -37,7 +37,7 @@ export default function upload(option) {
   if (option.onProgress && xhr.upload) {
     xhr.upload.onprogress = function progress(e) {
       if (e.total > 0) {
-        e.percent = e.loaded / e.total * 100;
+        e.percent = (e.loaded / e.total) * 100;
       }
       option.onProgress(e);
     };
@@ -67,11 +67,10 @@ export default function upload(option) {
     option.onSuccess(getBody(xhr), xhr);
   };
 
-
-  xhr.open('post', option.action, true);
+  xhr.open("post", option.action, true);
 
   // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
-  if (option.withCredentials && 'withCredentials' in xhr) {
+  if (option.withCredentials && "withCredentials" in xhr) {
     xhr.withCredentials = true;
   }
 
@@ -79,8 +78,8 @@ export default function upload(option) {
 
   // when set headers['X-Requested-With'] = null , can close default XHR header
   // see https://github.com/react-component/upload/issues/33
-  if (headers['X-Requested-With'] !== null) {
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  if (headers["X-Requested-With"] !== null) {
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
   }
 
   for (const h in headers) {
@@ -93,6 +92,6 @@ export default function upload(option) {
   return {
     abort() {
       xhr.abort();
-    },
+    }
   };
 }

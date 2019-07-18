@@ -1,4 +1,4 @@
-import template from 'art-template';
+import template from "art-template";
 
 var tpl = `
 <!doctype html>
@@ -39,10 +39,10 @@ var tpl = `
 	</div>
 </body>
 </html>
-`
+`;
 
-var render = template.compile(tpl)
+var render = template.compile(tpl);
 
-export default function StubPrint(data){
-	return render(data);
+export default function StubPrint(data) {
+  return render(data);
 }

@@ -4,13 +4,13 @@ ant admin template
 
 ## Technology
 
-View: React + Redva + Ant Design 
+View: React + Redva + Ant Design
 Build: webpack + less + es6
 
 ## Installation
 
 ```bash
-npm install 
+npm install
 ```
 
 ## Run
