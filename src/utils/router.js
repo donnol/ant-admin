@@ -19,6 +19,16 @@ let router = [
         component: "Layout/HomeRedirect"
       },
       {
+        name: "笔记列表",
+        path: "/note",
+        component: "Note/List"
+      },
+      {
+        name: "笔记详情",
+        path: "/note/detail",
+        component: "Note/Detail"
+      },
+      {
         name: "银行卡列表",
         path: "/card",
         component: "Card/List"
