@@ -31,6 +31,11 @@ export var adminMenu = [
     name: "长列表",
     icon: "table",
     path: "/virtual"
+  },
+  {
+    name: "笔记",
+    icon: "note",
+    path: "/note"
   }
 ];
 
