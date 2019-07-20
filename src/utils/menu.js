@@ -34,7 +34,7 @@ export var adminMenu = [
   },
   {
     name: "笔记",
-    icon: "note",
+    icon: "table",
     path: "/note"
   }
 ];
