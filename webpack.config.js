@@ -121,7 +121,7 @@ let webpackConfig = {
     compress: true,
     proxy: {
       "/": {
-        target: "http://localhost:3001",
+        target: "http://localhost:8810",
         changeOrigin: true
       }
     }
