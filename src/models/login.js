@@ -10,7 +10,7 @@ export default {
   },
   actions: {
     async islogin({ payload }, { dispatch }) {
-      let data = await request("/login/islogin", {
+      let data = await request("/auth/islogin", {
         method: "get"
       });
       if (data.code == 0) {
@@ -28,7 +28,7 @@ export default {
       }
     },
     async login({ payload }, { dispatch }) {
-      let data = await request("/login/login", {
+      let data = await request("/auth/login", {
         method: "POST",
         body: payload,
         autoCheck: true
@@ -38,7 +38,7 @@ export default {
       });
     },
     async logout({ payload }, { dispatch }) {
-      let data = await request("/login/logout", {
+      let data = await request("/auth/logout", {
         method: "POST",
         autoCheck: true
       });

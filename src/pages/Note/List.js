@@ -84,20 +84,20 @@ export default class List extends React.Component {
       })
     });
   };
-  mod = async noteId => {
+  mod = async noteID => {
     this.props.history.push({
       pathname: "/note/detail",
       search: qs.stringify({
-        noteId: noteId,
+        noteID: noteID,
         hasBack: true
       })
     });
   };
-  del = async noteId => {
+  del = async noteID => {
     await this.props.dispatch({
       type: "/note/del",
       payload: {
-        noteId: noteId
+        noteID: noteID
       }
     });
     await this.fetch();
@@ -129,7 +129,7 @@ export default class List extends React.Component {
     const columns = [
       {
         title: "笔记ID",
-        dataIndex: "noteId"
+        dataIndex: "noteID"
       },
       {
         title: "标题",
@@ -151,11 +151,11 @@ export default class List extends React.Component {
         title: "操作",
         render: (val, data) => (
           <Fragment>
-            <a onClick={this.mod.bind(this, data.noteId)}>修改</a>
+            <a onClick={this.mod.bind(this, data.noteID)}>修改</a>
             <Divider type="vertical" />
             <Popconfirm
               title="确定删除该笔记?"
-              onConfirm={this.del.bind(this, data.noteId)}
+              onConfirm={this.del.bind(this, data.noteID)}
             >
               <a>删除</a>
             </Popconfirm>
@@ -178,7 +178,7 @@ export default class List extends React.Component {
         </div>
         <StandardTable
           style={{ marginTop: "16px" }}
-          rowKey={"noteId"}
+          rowKey={"noteID"}
           loading={this.props.loading}
           columns={columns}
           value={this.state.list}
