@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 import { routerRedux } from "redva/router";
 export default {
-  namespace: "login",
+  namespace: "auth",
   state: null,
   mutations: {
     setCurrentLogin(state, { payload }) {
@@ -11,7 +11,7 @@ export default {
   actions: {
     async islogin({ payload }, { dispatch }) {
       let data = await request("/auth/islogin", {
-        method: "get"
+        method: "GET"
       });
       if (data.code == 0) {
         await dispatch({

@@ -9,7 +9,7 @@ export default class HomeRedirect extends React.Component {
     const role = this.props.login.role;
     var rediretUrl = null;
     if (role == "admin") {
-      rediretUrl = "/order";
+      rediretUrl = "/note";
     } else {
       rediretUrl = "/card";
     }

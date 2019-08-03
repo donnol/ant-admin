@@ -11,7 +11,7 @@ import { connect } from "redva";
 export default class LoginPage extends React.Component {
   onSubmit = async value => {
     await this.props.dispatch({
-      type: "login/login",
+      type: "auth/login",
       payload: {
         name: value.userName,
         password: value.password
@@ -32,8 +32,6 @@ export default class LoginPage extends React.Component {
           className={style.content}
           logo="https://image.fishedee.com/FulTCoakq411USQX_3HiZ79_fH0i"
           title={title}
-          userNamePlaceHolder="admin/user"
-          passwordPlaceHolder="888888/123456"
           onSubmit={this.onSubmit}
         />
         <GlobalFooter className={style.footer} copyright={copyright} />

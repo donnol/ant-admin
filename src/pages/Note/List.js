@@ -7,6 +7,7 @@ import StandardTable from "@/components/StandardTable";
 import MySelect from "@/components/MySelect";
 import qs from "qs";
 import cache from "@/utils/cache";
+import moment from "moment";
 
 const { MyRangePicker } = MyDatePicker;
 
@@ -16,19 +17,18 @@ const { MyRangePicker } = MyDatePicker;
 export default class List extends React.Component {
   constructor(props) {
     super(props);
-    this.state = cache.get("/note/list") || {
+    this.state = cache.get("/note/page") || {
       list: [],
       where: {},
       limit: {
-        pageIndex: 0,
-        pageSize: 10,
+        start: 0,
+        size: 10,
         count: 0
-      },
-      itemMap: {}
+      }
     };
   }
   componentDidUpdate = () => {
-    cache.set("/note/list", this.state);
+    cache.set("/note/page", this.state);
   };
   onQueryChange = where => {
     this.state.where = where;
@@ -40,40 +40,36 @@ export default class List extends React.Component {
     this.setState({});
   };
   onQuerySubmit = () => {
-    this.state.limit.pageIndex = 0;
+    this.state.limit.start = 0;
     this.fetch();
   };
   componentDidMount = () => {
     this.fetch();
   };
   fetch = async () => {
-    let data = await this.props.dispatch({
-      type: "/item/getAll"
-    });
-    let itemMap = {};
-    for (let i in data.data) {
-      itemMap[data.data[i].itemId] = data.data[i];
-    }
-    this.state.itemMap = itemMap;
     let where = { ...this.state.where };
-    if (where.createTime) {
-      (where.beginTime = where.createTime[0] + " 00:00:00"),
-        (where.endTime = where.createTime[1] + " 23:59:59"),
-        (where.createTime = undefined);
+    if (where.createdAt) {
+      (where.beginTime = where.createdAt[0] + " 00:00:00"),
+        (where.endTime = where.createdAt[1] + " 23:59:59"),
+        (where.createdAt = undefined);
     }
     let limit = {
       ...this.state.limit,
       count: undefined
     };
-    data = await this.props.dispatch({
-      type: "/note/search",
+    let data = await this.props.dispatch({
+      type: "/note/page",
       payload: {
         ...where,
         ...limit
       }
     });
-    this.state.limit.count = data.count;
-    this.state.list = data.data;
+    this.state.limit.count = data.total;
+    this.state.list = data.list.map(function(element) {
+      var temp = new Date(parseInt(element.createdAt) * 1000);
+      element.createdAt = moment(temp).format("YYYY-MM-DD hh:mm:ss");
+      return element;
+    });
     this.setState({});
   };
   add = async () => {
@@ -120,7 +116,7 @@ export default class List extends React.Component {
       },
       {
         title: "时间",
-        dataIndex: "createTime",
+        dataIndex: "createdAt",
         render: () => {
           return <MyRangePicker />;
         }
@@ -141,11 +137,7 @@ export default class List extends React.Component {
       },
       {
         title: "创建时间",
-        dataIndex: "createTime"
-      },
-      {
-        title: "更新时间",
-        dataIndex: "modifyTime"
+        dataIndex: "createdAt"
       },
       {
         title: "操作",

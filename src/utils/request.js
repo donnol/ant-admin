@@ -52,7 +52,7 @@ export default async function request(url, options) {
       "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
       ...newOptions.headers
     };
-    newOptions.body = qs.stringify(newOptions.body);
+    newOptions.body = JSON.stringify(newOptions.body);
   }
   if (newOptions.query) {
     let query = qs.stringify(newOptions.query);
