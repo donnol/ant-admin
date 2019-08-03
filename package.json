@@ -33,6 +33,7 @@
     "html2canvas": "^1.0.0-alpha.12",
     "image-compressor.js": "^1.1.4",
     "load-script": "^1.0.0",
+    "moment": "^2.24.0",
     "nzh": "^1.0.4",
     "qs": "^6.6.0",
     "react": "^16.8.2",
