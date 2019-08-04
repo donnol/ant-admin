@@ -21,8 +21,8 @@ export default class List extends React.Component {
       list: [],
       where: {},
       limit: {
-        start: 0,
-        size: 10,
+        pageIndex: 0,
+        pageSize: 10,
         count: 0
       }
     };
@@ -40,7 +40,7 @@ export default class List extends React.Component {
     this.setState({});
   };
   onQuerySubmit = () => {
-    this.state.limit.start = 0;
+    this.state.limit.pageIndex = 0;
     this.fetch();
   };
   componentDidMount = () => {
@@ -49,8 +49,8 @@ export default class List extends React.Component {
   fetch = async () => {
     let where = { ...this.state.where };
     if (where.createdAt) {
-      (where.beginTime = where.createdAt[0] + " 00:00:00"),
-        (where.endTime = where.createdAt[1] + " 23:59:59"),
+      (where.beginTime = Date.parse(where.createdAt[0] + " 00:00:00") / 1000),
+        (where.endTime = Date.parse(where.createdAt[1] + " 23:59:59") / 1000),
         (where.createdAt = undefined);
     }
     let limit = {
