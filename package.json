@@ -29,6 +29,7 @@
     "art-template": "^4.13.2",
     "big.js": "^5.2.2",
     "bizcharts": "^3.4.3",
+    "braft-editor": "^2.3.7",
     "classname": "0.0.0",
     "html2canvas": "^1.0.0-alpha.12",
     "image-compressor.js": "^1.1.4",
