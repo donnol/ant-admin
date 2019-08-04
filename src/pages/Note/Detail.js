@@ -11,6 +11,8 @@ import CardList from "@/pages/Card2/Select";
 import qs from "qs";
 import cache from "@/utils/cache";
 import InputWrapper from "@/components/InputWrapper";
+import BraftEditor from "braft-editor";
+import "braft-editor/dist/index.css";
 
 @connect()
 export default class Detail extends React.Component {
@@ -20,11 +22,13 @@ export default class Detail extends React.Component {
     if (query.noteID) {
       this.state = {
         data: {},
-        noteID: query.noteID
+        noteID: query.noteID,
+        editorState: null
       };
     } else {
       this.state = cache.get("/note/detail") || {
-        data: {}
+        data: {},
+        editorState: null
       };
     }
     this.state.modalVisible = false;
@@ -46,8 +50,16 @@ export default class Detail extends React.Component {
           noteID: this.state.noteID
         }
       });
+      // 没有这句，就没有初始文本
+      this.state.editorState = BraftEditor.createEditorState(data.detail);
       this.state.data = data;
     }
+    this.setState({});
+  };
+  handleEditorChange = editorState => {
+    // 没有这句，就没有更改后的文本
+    this.state.editorState = editorState;
+    this.state.data.detail = editorState.toHTML();
     this.setState({});
   };
   onSubmit = async () => {
@@ -70,6 +82,7 @@ export default class Detail extends React.Component {
     this.props.history.go(-1);
   };
   render = () => {
+    let { editorState } = this.state;
     let columns = [
       {
         title: "标题",
@@ -88,7 +101,15 @@ export default class Detail extends React.Component {
         wrapperCol: { span: 20 },
         rules: [{ required: true }],
         render: () => {
-          return <Input placeholder="请输入" />;
+          return (
+            <div>
+              <BraftEditor
+                value={editorState}
+                onChange={this.handleEditorChange}
+                onSave={this.submitContent}
+              />
+            </div>
+          );
         }
       }
     ];
