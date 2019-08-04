@@ -73,9 +73,15 @@ export default class List extends React.Component {
     this.setState({});
   };
   add = async () => {
+    let data = await this.props.dispatch({
+      type: "/note/add",
+      payload: {}
+    });
+
     this.props.history.push({
       pathname: "/note/detail",
       search: qs.stringify({
+        noteID: data.id,
         hasBack: true
       })
     });

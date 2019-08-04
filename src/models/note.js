@@ -21,7 +21,7 @@ export default {
     async del({ payload }, { dispatch }) {
       return await request("/note", {
         method: "DELETE",
-        body: payload,
+        query: payload,
         autoCheck: true
       });
     },
