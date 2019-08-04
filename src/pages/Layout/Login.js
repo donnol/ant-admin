@@ -11,7 +11,7 @@ import { connect } from "redva";
 export default class LoginPage extends React.Component {
   onSubmit = async value => {
     await this.props.dispatch({
-      type: "auth/login",
+      type: "login/login",
       payload: {
         name: value.userName,
         password: value.password

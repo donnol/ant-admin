@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 import { routerRedux } from "redva/router";
 export default {
-  namespace: "auth",
+  namespace: "login",
   state: null,
   mutations: {
     setCurrentLogin(state, { payload }) {
