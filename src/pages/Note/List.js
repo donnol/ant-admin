@@ -65,11 +65,13 @@ export default class List extends React.Component {
       }
     });
     this.state.limit.count = data.total;
-    this.state.list = data.list.map(function(element) {
-      var temp = new Date(parseInt(element.createdAt) * 1000);
-      element.createdAt = moment(temp).format("YYYY-MM-DD hh:mm:ss");
-      return element;
-    });
+    if (data.list) {
+      this.state.list = data.list.map(function(element) {
+        var temp = new Date(parseInt(element.createdAt) * 1000);
+        element.createdAt = moment(temp).format("YYYY-MM-DD hh:mm:ss");
+        return element;
+      });
+    }
     this.setState({});
   };
   add = async () => {
