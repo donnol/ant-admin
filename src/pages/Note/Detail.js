@@ -59,7 +59,7 @@ export default class Detail extends React.Component {
   handleEditorChange = editorState => {
     // 没有这句，就没有更改后的文本
     this.state.editorState = editorState;
-    this.state.data.detail = editorState.toHTML();
+    this.state.data.detail = editorState.toText();
     this.setState({});
   };
   onSubmit = async () => {
