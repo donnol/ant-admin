@@ -13,6 +13,7 @@ import cache from "@/utils/cache";
 import InputWrapper from "@/components/InputWrapper";
 import BraftEditor from "braft-editor";
 import "braft-editor/dist/index.css";
+import ReactMarkdown from "react-markdown";
 
 @connect()
 export default class Detail extends React.Component {
@@ -59,7 +60,7 @@ export default class Detail extends React.Component {
   handleEditorChange = editorState => {
     // 没有这句，就没有更改后的文本
     this.state.editorState = editorState;
-    this.state.data.detail = editorState.toText();
+    this.state.data.detail = editorState.toHTML();
     this.setState({});
   };
   onSubmit = async () => {
@@ -83,6 +84,19 @@ export default class Detail extends React.Component {
   };
   render = () => {
     let { editorState } = this.state;
+    let detail;
+    if (editorState) {
+      detail = editorState.toText();
+    }
+
+    let inlineCode = props => <strong>{props.value}</strong>;
+    let code = props => (
+      <pre>
+        <code>{props.value}</code>
+      </pre>
+    );
+    let tableRow = props => <tr className="foo">{props.children}</tr>;
+
     let columns = [
       {
         title: "标题",
@@ -98,7 +112,7 @@ export default class Detail extends React.Component {
         title: "详情",
         dataIndex: "detail",
         labelCol: { span: 2 },
-        wrapperCol: { span: 20 },
+        wrapperCol: { span: 10 },
         rules: [{ required: true }],
         render: () => {
           return (
@@ -107,6 +121,23 @@ export default class Detail extends React.Component {
                 value={editorState}
                 onChange={this.handleEditorChange}
                 onSave={this.submitContent}
+              />
+            </div>
+          );
+        }
+      },
+      {
+        title: "预览",
+        dataIndex: "preview",
+        labelCol: { span: 2 },
+        wrapperCol: { span: 10 },
+        render: () => {
+          return (
+            <div className="App">
+              <ReactMarkdown
+                source={detail}
+                escapeHtml={false}
+                renderers={{ code, inlineCode, tableRow }}
               />
             </div>
           );
