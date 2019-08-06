@@ -10,10 +10,19 @@ import MyInputDecimal from "@/components/MyInputDecimal";
 import CardList from "@/pages/Card2/Select";
 import qs from "qs";
 import cache from "@/utils/cache";
-import InputWrapper from "@/components/InputWrapper";
-import BraftEditor from "braft-editor";
-import "braft-editor/dist/index.css";
-import ReactMarkdown from "react-markdown";
+import MdEditor from "react-markdown-editor-lite";
+import MarkdownIt from "markdown-it";
+import emoji from "markdown-it-emoji";
+import subscript from "markdown-it-sub";
+import superscript from "markdown-it-sup";
+import footnote from "markdown-it-footnote";
+import deflist from "markdown-it-deflist";
+import abbreviation from "markdown-it-abbr";
+import insert from "markdown-it-ins";
+import mark from "markdown-it-mark";
+import tasklists from "markdown-it-task-lists";
+import hljs from "highlight.js";
+import "highlight.js/styles/github.css";
 
 @connect()
 export default class Detail extends React.Component {
@@ -23,15 +32,36 @@ export default class Detail extends React.Component {
     if (query.noteID) {
       this.state = {
         data: {},
-        noteID: query.noteID,
-        editorState: null
+        noteID: query.noteID
       };
     } else {
       this.state = cache.get("/note/detail") || {
-        data: {},
-        editorState: null
+        data: {}
       };
     }
+    // initial a parser
+    this.mdParser = new MarkdownIt({
+      html: true,
+      linkify: true,
+      typographer: true,
+      highlight: function(str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          try {
+            return hljs.highlight(lang, str).value;
+          } catch (__) {}
+        }
+        return ""; // use external default escaping
+      }
+    })
+      .use(emoji)
+      .use(subscript)
+      .use(superscript)
+      .use(footnote)
+      .use(deflist)
+      .use(abbreviation)
+      .use(insert)
+      .use(mark)
+      .use(tasklists, { enabled: this.taskLists });
     this.state.modalVisible = false;
   }
   componentDidUpdate = () => {
@@ -51,17 +81,12 @@ export default class Detail extends React.Component {
           noteID: this.state.noteID
         }
       });
-      // 没有这句，就没有初始文本
-      this.state.editorState = BraftEditor.createEditorState(data.detail);
       this.state.data = data;
     }
     this.setState({});
   };
-  handleEditorChange = editorState => {
-    // 没有这句，就没有更改后的文本
-    this.state.editorState = editorState;
-    this.state.data.detail = editorState.toHTML();
-    this.setState({});
+  handleEditorChange = ({ html, md }) => {
+    console.log("handleEditorChange", html, md);
   };
   onSubmit = async () => {
     if (this.state.noteID) {
@@ -83,19 +108,7 @@ export default class Detail extends React.Component {
     this.props.history.go(-1);
   };
   render = () => {
-    let { editorState } = this.state;
-    let detail;
-    if (editorState) {
-      detail = editorState.toText();
-    }
-
-    let inlineCode = props => <strong>{props.value}</strong>;
-    let code = props => (
-      <pre>
-        <code>{props.value}</code>
-      </pre>
-    );
-    let tableRow = props => <tr className="foo">{props.children}</tr>;
+    let detail = String(this.state.data.detail);
 
     let columns = [
       {
@@ -112,32 +125,23 @@ export default class Detail extends React.Component {
         title: "详情",
         dataIndex: "detail",
         labelCol: { span: 2 },
-        wrapperCol: { span: 10 },
+        wrapperCol: { span: 20 },
         rules: [{ required: true }],
         render: () => {
           return (
-            <div>
-              <BraftEditor
-                value={editorState}
+            <div style={{ height: "500px" }}>
+              <MdEditor
+                value={detail}
+                renderHTML={text => this.mdParser.render(text)}
                 onChange={this.handleEditorChange}
-                onSave={this.submitContent}
-              />
-            </div>
-          );
-        }
-      },
-      {
-        title: "预览",
-        dataIndex: "preview",
-        labelCol: { span: 2 },
-        wrapperCol: { span: 10 },
-        render: () => {
-          return (
-            <div className="App">
-              <ReactMarkdown
-                source={detail}
-                escapeHtml={false}
-                renderers={{ code, inlineCode, tableRow }}
+                config={{
+                  view: {
+                    menu: true,
+                    md: true,
+                    html: true
+                  },
+                  imageUrl: "https://octodex.github.com/images/minion.png"
+                }}
               />
             </div>
           );
