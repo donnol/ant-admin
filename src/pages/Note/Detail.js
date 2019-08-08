@@ -1,13 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { connect } from "redva";
-import { Input, Button } from "antd";
-import MySelect from "@/components/MySelect";
-import MyInputButton from "@/components/MyInputButton";
+import { Input } from "antd";
 import StandardForm from "@/components/StandardForm";
-import StandardTable from "@/components/StandardTable";
-import StandardModal from "@/components/StandardModal";
-import MyInputDecimal from "@/components/MyInputDecimal";
-import CardList from "@/pages/Card2/Select";
 import qs from "qs";
 import cache from "@/utils/cache";
 import MdEditor from "react-markdown-editor-lite";

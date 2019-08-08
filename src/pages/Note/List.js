@@ -4,7 +4,6 @@ import { Button, Input, Divider, Popconfirm } from "antd";
 import MyDatePicker from "@/components/MyDatePicker";
 import StandardQuery from "@/components/StandardQuery";
 import StandardTable from "@/components/StandardTable";
-import MySelect from "@/components/MySelect";
 import qs from "qs";
 import cache from "@/utils/cache";
 import moment from "moment";
@@ -71,6 +70,8 @@ export default class List extends React.Component {
         element.createdAt = moment(temp).format("YYYY-MM-DD hh:mm:ss");
         return element;
       });
+    } else {
+      this.state.list = data.list;
     }
     this.setState({});
   };
