@@ -50,8 +50,8 @@ export default class Home extends React.Component {
     const notice = [
       {
         icon: "user",
-        title: "销售订单需要调整库存",
-        description: "调整库存",
+        title: "暂无",
+        description: "暂无",
         onClick: () => {
           alert("3");
         }
@@ -68,6 +68,7 @@ export default class Home extends React.Component {
     }
     return (
       <Navigator
+        className={style.root}
         title={title}
         menu={menu}
         url={this.props.location.pathname}

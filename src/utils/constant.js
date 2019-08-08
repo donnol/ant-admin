@@ -1,6 +1,6 @@
-const copyright = "ant-admin 管理系统";
-const author = "fish";
-const title = "后台管理系统";
+const copyright = "笔记 管理系统";
+const author = "donnol";
+const title = "笔记管理系统";
 const uploadImage = {
   name: "data",
   action: "/upload/image",
