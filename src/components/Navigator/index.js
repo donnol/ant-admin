@@ -115,6 +115,11 @@ export default class Navigator extends React.Component {
   onSelectDropDown = event => {
     event.item.props.onClick();
   };
+  toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed
+    });
+  };
   getDropdownMenu = () => {
     let menuItem = [];
     for (let i in this.props.login.dropdown) {
@@ -131,6 +136,7 @@ export default class Navigator extends React.Component {
     return (
       <Layout className={style.root}>
         <Sider
+          trigger={null}
           className={style.sider}
           collapsible={true}
           collapsed={this.state.collapsed}
@@ -143,6 +149,11 @@ export default class Navigator extends React.Component {
             </div>
           </Dropdown>
           {this.getMainMenu()}
+          <Icon
+            className="trigger"
+            type={this.state.collapsed ? "menu-unfold" : "menu-fold"}
+            onClick={this.toggle}
+          />
         </Sider>
         <Content className={style.content}>{this.props.children}</Content>
       </Layout>
