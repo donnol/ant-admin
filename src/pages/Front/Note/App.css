@@ -1,0 +1,42 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+.App-left {
+  float: left;
+  color: #09d3ac;
+  background-color: brown;
+  width: 28%;
+  margin: 1%;
+}
+
+.App-right {
+  float: left;
+  color: aquamarine;
+  background-color: #09d3ac;
+  width: 68%;
+  margin: 1%;
+}
+
+.Border {
+  border: 1px solid gray;
+}

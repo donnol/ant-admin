@@ -9,6 +9,12 @@ let router = [
     component: "Layout/Login"
   },
   {
+    name: "前端",
+    path: "/front",
+    component: "Front/Note/App"
+  },
+  // 首页路由必须放在最后一个，不然其它路由会找不到
+  {
     name: "首页",
     path: "/",
     component: "Layout/Home",
