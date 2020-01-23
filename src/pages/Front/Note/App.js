@@ -1,15 +1,15 @@
 import React from "react";
-import "./App.css";
+import style from "./App.less";
 
 export default class App extends React.Component {
   render = () => {
     return (
       <div>
-        <div className="App-left">
-          <div className="Border">Left</div>
+        <div className={style.AppLeft}>
+          <div className={style.Border}>Left</div>
         </div>
-        <div className="App-right">
-          <div className="Border">Right</div>
+        <div className={style.AppRight}>
+          <div className={style.Border}>Right</div>
         </div>
       </div>
     );
