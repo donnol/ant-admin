@@ -24,7 +24,7 @@ export default class App extends React.Component {
           // 需要记住一个简单的规则：对于用表达式套数组罗列到页面上的元素，都要为每个元素加上 key 属性，这个 key 必须是每个元素唯一的标识。一般来说，key 的值可以直接后台数据返回的 id，因为后台的 id 都是唯一的。
           // 有时候id也不是唯一的，还要加上类型等其它额外字段
           // 如果表达式又放到了html元素里，也要加上大括号，没有则可以直接使用
-          i % 2 === 0 ? user.name : <div>{user.name}</div>
+          i % 2 === 0 ? user.name : <div key={i}>{user.name}</div>
         )}
         {/* 直接使用表达式 */}
         {left}
