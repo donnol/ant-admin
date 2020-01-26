@@ -82,7 +82,7 @@ let webpackConfig = {
     new cleanWebpackPlugin(["dist"]),
     new htmlWebpackPlugin({
       filename: "index.html",
-      title: "antd admin",
+      title: "note admin",
       template: "./src/index.html"
     }),
     new copyWebpackPlugin([
