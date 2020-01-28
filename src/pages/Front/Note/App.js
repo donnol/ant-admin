@@ -7,18 +7,23 @@ export default class App extends React.Component {
     console.log("constructor");
 
     // 初始化state对象
-    this.state = { show: false };
+    this.state = {
+      users: [{ name: "jd" }, { name: "jc" }, { name: "jj" }, { name: "jx" }]
+    };
 
-    // 给自定义方法绑定this
-    this.click = this.click.bind(this);
+    // 给自定义方法绑定this，用class fields(fieldName = () => {...})则可以省略这个步骤
+    // this.click = this.click.bind(this);
   }
-  click = () => {
-    console.log("click", this.state.show);
-    this.setState({ show: !this.state.show });
-    console.log("click", this.state.show);
+  push = () => {
+    // 添加数据
+    this.state.users.push({ name: "j" + this.state.users.length });
+    this.setState({});
+  };
+  pop = () => {
+    this.state.users.pop();
+    this.setState({});
   };
   render = () => {
-    let show = this.state.show;
     let left = function(name, i) {
       return (
         <div key={i} className={style.AppLeft}>
@@ -33,22 +38,26 @@ export default class App extends React.Component {
         </div>
       );
     };
-    let users = [{ name: "jd" }, { name: "jc" }];
+    let users = this.state.users;
+    let count = users.length;
     return (
       <div>
-        {/* 条件 */}
-        {show ? "a" : "b"}
         <div>
-          <button onClick={this.click}>Click</button>
+          {users.map((user, i) =>
+            i % 2 === 0 ? (
+              left(user.name, i)
+            ) : (
+              <div key={i}>{right(user.name)}</div>
+            )
+          )}
         </div>
-        {/* 循环 */}
-        {users.map((user, i) =>
-          i % 2 === 0 ? (
-            left(user.name, i)
-          ) : (
-            <div key={i}>{right(user.name)}</div>
-          )
-        )}
+        <div>
+          <div className={style.Count}>user count: {count ? count : "0"}</div>
+          <div className={style.Button}>
+            <button onClick={this.pop}>-</button>
+            <button onClick={this.push}>+</button>
+          </div>
+        </div>
       </div>
     );
   };
