@@ -51,9 +51,9 @@ export default class App extends React.Component {
             )
           )}
         </div>
-        <div>
-          <div className={style.Count}>user count: {count ? count : "0"}</div>
-          <div className={style.Button}>
+        <div className={style.Footer}>
+          <div>user count: {count ? count : "0"}</div>
+          <div>
             <button onClick={this.pop}>-</button>
             <button onClick={this.push}>+</button>
           </div>
