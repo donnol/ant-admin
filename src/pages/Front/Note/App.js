@@ -39,7 +39,8 @@ export default class App extends React.Component {
     let count = users.length;
     return (
       <div>
-        <div>
+        {/* 没有overflow的话，包含float的div没能很好地算出它的height */}
+        <div style={{ overflow: "hidden" }}>
           {users.map((user, i) =>
             i % 2 === 0 ? (
               left(user.name, i)
