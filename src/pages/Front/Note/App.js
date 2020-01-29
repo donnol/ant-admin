@@ -10,9 +10,6 @@ export default class App extends React.Component {
     this.state = {
       users: [{ name: "jd" }, { name: "jc" }, { name: "jj" }, { name: "jx" }]
     };
-
-    // 给自定义方法绑定this，用class fields(fieldName = () => {...})则可以省略这个步骤
-    // this.click = this.click.bind(this);
   }
   push = () => {
     // 添加数据
