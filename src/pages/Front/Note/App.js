@@ -21,14 +21,14 @@ export default class App extends React.Component {
     this.setState({});
   };
   render = () => {
-    let left = function(name, i) {
+    let left = function(name, i, style) {
       return (
         <div key={i} className={style.AppLeft}>
           <div className={style.Border}>{name}</div>
         </div>
       );
     };
-    let right = function(name) {
+    let right = function(name, style) {
       return (
         <div className={style.AppRight}>
           <div className={style.Border}>{name}</div>
@@ -43,9 +43,9 @@ export default class App extends React.Component {
         <div style={{ overflow: "hidden" }}>
           {users.map((user, i) =>
             i % 2 === 0 ? (
-              left(user.name, i)
+              left(user.name, i, style)
             ) : (
-              <div key={i}>{right(user.name)}</div>
+              <div key={i}>{right(user.name, style)}</div>
             )
           )}
         </div>
