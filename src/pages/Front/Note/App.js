@@ -1,60 +1,86 @@
+import cache from "@/utils/cache";
+import moment from "moment";
 import React from "react";
+import { connect } from "redva";
 import style from "./App.less";
 
+@connect(state => {
+  return { loading: state.loading.global };
+})
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     console.log("constructor");
 
     // 初始化state对象
-    this.state = {
-      users: [{ name: "jd" }, { name: "jc" }, { name: "jj" }, { name: "jx" }]
+    this.state = cache.get("/note/page") || {
+      list: [],
+      where: {},
+      limit: {
+        pageIndex: 0,
+        pageSize: 10,
+        count: 0
+      }
     };
   }
-  push = () => {
-    // 添加数据
-    this.state.users.push({ name: "j" + this.state.users.length });
-    this.setState({});
+  componentDidMount = () => {
+    this.fetch();
   };
-  pop = () => {
-    this.state.users.pop();
+  fetch = async () => {
+    let limit = {
+      ...this.state.limit,
+      count: undefined
+    };
+    let data = await this.props.dispatch({
+      type: "/note/page",
+      payload: {
+        ...limit,
+      }
+    });
+    this.state.limit.count = data.total;
+    if (data.list) {
+      this.state.list = data.list.map(function (element) {
+        var temp = new Date(parseInt(element.createdAt) * 1000);
+        element.createdAt = moment(temp).format("YYYY-MM-DD hh:mm:ss");
+        return element;
+      });
+    } else {
+      this.state.list = data.list;
+    }
+    console.log(this.state);
     this.setState({});
   };
   render = () => {
-    let left = function(name, i, style) {
+    let left = function (name, i, style) {
       return (
         <div key={i} className={style.AppLeft}>
           <div className={style.Border}>{name}</div>
         </div>
       );
     };
-    let right = function(name, style) {
+    let right = function (name, i, style) {
       return (
-        <div className={style.AppRight}>
+        <div key={i} className={style.AppRight}>
           <div className={style.Border}>{name}</div>
         </div>
       );
     };
-    let users = this.state.users;
-    let count = users.length;
+    let list = this.state.list;
+    let count = list.length;
     return (
       <div>
         {/* 没有overflow的话，包含float的div没能很好地算出它的height */}
         <div style={{ overflow: "hidden" }}>
-          {users.map((user, i) =>
+          {list.map((single, i) =>
             i % 2 === 0 ? (
-              left(user.name, i, style)
+              left(single.noteID + ". " + single.title, single.noteID, style)
             ) : (
-              <div key={i}>{right(user.name, style)}</div>
-            )
+                right(single.noteID + ". " + single.title, single.noteID, style)
+              )
           )}
         </div>
         <div className={style.Footer}>
-          <div>user count: {count ? count : "0"}</div>
-          <div>
-            <button onClick={this.pop}>-</button>
-            <button onClick={this.push}>+</button>
-          </div>
+          <div>data count: {count ? count : "0"}</div>
         </div>
       </div>
     );
