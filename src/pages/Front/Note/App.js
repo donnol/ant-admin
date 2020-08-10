@@ -1,5 +1,6 @@
 import cache from "@/utils/cache";
 import moment from "moment";
+import qs from "qs";
 import React from "react";
 import { connect } from "redva";
 import style from "./App.less";
@@ -50,18 +51,30 @@ export default class App extends React.Component {
     console.log(this.state);
     this.setState({});
   };
+  click = async noteID => {
+    console.log("click", noteID);
+    this.props.history.push({
+      pathname: "/front/note/detail",
+      search: qs.stringify({
+        noteID: noteID,
+        hasBack: true
+      })
+    });
+  };
   render = () => {
+    let click = this.click;
+
     let left = function (name, i, style) {
       return (
         <div key={i} className={style.AppLeft}>
-          <div className={style.Border}>{name}</div>
+          <div className={style.Border} onClick={click.bind(this, i)}>{name}</div>
         </div>
       );
     };
     let right = function (name, i, style) {
       return (
         <div key={i} className={style.AppRight}>
-          <div className={style.Border}>{name}</div>
+          <div className={style.Border} onClick={click.bind(this, i)}>{name}</div>
         </div>
       );
     };

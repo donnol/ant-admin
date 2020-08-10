@@ -1,6 +1,6 @@
-import { Switch, Route, Redirect } from "redva/router";
-import dynamic from "redva/dynamic";
 import React from "react";
+import dynamic from "redva/dynamic";
+import { Redirect, Route, Switch } from "redva/router";
 
 let router = [
   {
@@ -12,6 +12,11 @@ let router = [
     name: "前端",
     path: "/front",
     component: "Front/Note/App"
+  },
+  {
+    name: "笔记详情",
+    path: "/front/note/detail",
+    component: "Front/Note/Detail"
   },
   // 首页路由必须放在最后一个，不然其它路由会找不到
   {

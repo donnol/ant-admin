@@ -82,25 +82,6 @@ export default class Detail extends React.Component {
     handleEditorChange = ({ html, md }) => {
         console.log("handleEditorChange", html, md);
     };
-    onSubmit = async () => {
-        if (this.state.noteID) {
-            await this.props.dispatch({
-                type: "/note/mod",
-                payload: {
-                    noteID: this.state.noteID,
-                    ...this.state.data
-                }
-            });
-        } else {
-            await this.props.dispatch({
-                type: "/note/add",
-                payload: this.state.data
-            });
-            this.state.data = {};
-            this.componentDidUpdate();
-        }
-        this.props.history.go(-1);
-    };
     render = () => {
         let detail = String(this.state.data.detail);
 
@@ -112,7 +93,7 @@ export default class Detail extends React.Component {
                 wrapperCol: { span: 20 },
                 rules: [{ required: true }],
                 render: () => {
-                    return <Input placeholder="请输入" />;
+                    return <Input style={{ margin: "2%" }} disabled placeholder="请输入" />;
                 }
             },
             {
@@ -123,16 +104,19 @@ export default class Detail extends React.Component {
                 rules: [{ required: true }],
                 render: () => {
                     return (
-                        <div style={{ height: "500px" }}>
+                        <div style={{ height: "500px", margin: "2%" }}>
                             <MdEditor
                                 value={detail}
                                 renderHTML={text => this.mdParser.render(text)}
                                 onChange={this.handleEditorChange}
+                                readOnly={true}
                                 config={{
                                     view: {
-                                        menu: true,
-                                        md: true,
                                         html: true
+                                    },
+                                    canView: {
+                                        html: true,
+                                        hideMenu: true,
                                     },
                                     imageUrl: "https://octodex.github.com/images/minion.png"
                                 }}
@@ -151,7 +135,6 @@ export default class Detail extends React.Component {
                 data={this.state.data}
                 onChange={this.onChange}
                 submitCol={{ span: 22, offset: 2 }}
-                onSubmit={this.onSubmit}
             />
         );
     };
