@@ -40,9 +40,13 @@ export default class Detail extends React.Component {
         this.setState({});
     };
     render = () => {
+        let title = String(this.state.data.title);
         let detail = String(this.state.data.detail);
         return (
-            <ReactMarkdown source={detail} className={style.Content} />
+            <div>
+                <ReactMarkdown source={title} className={style.Title} />
+                <ReactMarkdown source={detail} className={style.Content} />
+            </div>
         );
     };
 }
