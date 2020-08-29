@@ -2,6 +2,7 @@ import cache from "@/utils/cache";
 import moment from "moment";
 import qs from "qs";
 import React from "react";
+import ReactMarkdown from 'react-markdown';
 import { connect } from "redva";
 import style from "./App.less";
 
@@ -64,36 +65,31 @@ export default class App extends React.Component {
   render = () => {
     let click = this.click;
 
-    let left = function (name, i, style) {
+    let block = function (note, i) {
+      let appSytle = i % 2 === 0 ? style.AppLeft : style.AppRight
       return (
-        <div key={i} className={style.AppLeft}>
-          <div className={style.Border} onClick={click.bind(this, i)}>{name}</div>
+        <div key={note.noteID} className={appSytle}>
+          <div className={style.Border} onClick={click.bind(this, note.noteID)}>{note.noteID + ". " + note.title}</div>
+          <ReactMarkdown className={style.Detail} >{note.detail.substr(0, 10) + "..."}</ReactMarkdown>
         </div>
       );
     };
-    let right = function (name, i, style) {
-      return (
-        <div key={i} className={style.AppRight}>
-          <div className={style.Border} onClick={click.bind(this, i)}>{name}</div>
-        </div>
-      );
-    };
+
     let list = this.state.list;
     let count = list.length;
+    let total = this.state.limit.count;
     return (
       <div>
         {/* 没有overflow的话，包含float的div没能很好地算出它的height */}
+        <div style={{ textAlign: "center", margin: "1%", fontSize: "x-large" }}>笔记列表</div>
         <div style={{ overflow: "hidden" }}>
-          {list.map((single, i) =>
-            i % 2 === 0 ? (
-              left(single.noteID + ". " + single.title, single.noteID, style)
-            ) : (
-                right(single.noteID + ". " + single.title, single.noteID, style)
-              )
+          {list.map((single, i) => {
+            return block(single, i)
+          }
           )}
         </div>
         <div className={style.Footer}>
-          <div>data count: {count ? count : "0"}</div>
+          <div>本页数量: {count ? count : "0"}; 总数：{total}</div>
         </div>
       </div>
     );
