@@ -1,22 +1,22 @@
-import React from "react";
-import { connect } from "redva";
-import { Input } from "antd";
 import StandardForm from "@/components/StandardForm";
-import qs from "qs";
 import cache from "@/utils/cache";
-import MdEditor from "react-markdown-editor-lite";
-import MarkdownIt from "markdown-it";
-import emoji from "markdown-it-emoji";
-import subscript from "markdown-it-sub";
-import superscript from "markdown-it-sup";
-import footnote from "markdown-it-footnote";
-import deflist from "markdown-it-deflist";
-import abbreviation from "markdown-it-abbr";
-import insert from "markdown-it-ins";
-import mark from "markdown-it-mark";
-import tasklists from "markdown-it-task-lists";
+import { Input } from "antd";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+import MarkdownIt from "markdown-it";
+import abbreviation from "markdown-it-abbr";
+import deflist from "markdown-it-deflist";
+import emoji from "markdown-it-emoji";
+import footnote from "markdown-it-footnote";
+import insert from "markdown-it-ins";
+import mark from "markdown-it-mark";
+import subscript from "markdown-it-sub";
+import superscript from "markdown-it-sup";
+import tasklists from "markdown-it-task-lists";
+import qs from "qs";
+import React from "react";
+import MdEditor from "react-markdown-editor-lite";
+import { connect } from "redva";
 
 @connect()
 export default class Detail extends React.Component {
@@ -82,6 +82,69 @@ export default class Detail extends React.Component {
   handleEditorChange = ({ html, md }) => {
     console.log("handleEditorChange", html, md);
   };
+  uploadFile = async (url, data) => {
+    const formData  = new FormData();
+  
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {},
+      body: formData
+    });
+  
+    console.log(response)
+  }
+  handleImageUpload(file, callback) {
+    const reader = new FileReader()
+    reader.onload = () => {      
+      const convertBase64UrlToBlob = (urlData) => {  
+        let arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1]
+        let bstr = atob(arr[1])
+        let n = bstr.length
+        let u8arr = new Uint8Array(n)
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n)
+        }
+        return new Blob([u8arr], {type:mime})
+      }
+      console.log("file:",file, "file.File:", file.File)
+      const blob = convertBase64UrlToBlob(reader.result)
+      console.log("blob:", blob)
+
+      var id = 9;
+      const url = "http://localhost:8080/v1/file"
+
+      let formData  = new FormData();
+      formData.append("file1", blob, file.name)
+
+      // fetch介绍：https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          // 如果添加下面的Content-Type header，后端会报错：multipart: NextPart: bufio: buffer full
+          // From https://stackoverflow.com/questions/25493706/ajax-upload-file-to-golang-server-with-content-type-multipart
+          // 'Content-Type': 'multipart/form-data; charset=utf-8; boundary=dbfdfd2232bb'
+        },
+        body: formData
+      })
+        .then(response => {
+          let data = response.json();
+          console.log("response:", response, "body:", data)
+          return data
+        })
+        .then(function(myJson) {
+          console.log("myJson:",myJson, "data:", myJson.data);
+          id = myJson.data.id;
+          console.log("id:", id);
+
+          // 当异步上传获取图片地址后，执行calback回调（参数为imageUrl字符串），即可将图片地址写入markdown
+          callback('http://localhost:8080/v1/file?id=' + id);
+        })
+        .catch(error => {
+          console.error(error)
+        });
+    }
+    reader.readAsDataURL(file)
+  }
   onSubmit = async () => {
     if (this.state.noteID) {
       await this.props.dispatch({
@@ -128,6 +191,7 @@ export default class Detail extends React.Component {
                 value={detail}
                 renderHTML={text => this.mdParser.render(text)}
                 onChange={this.handleEditorChange}
+                onImageUpload={this.handleImageUpload}
                 config={{
                   view: {
                     menu: true,
