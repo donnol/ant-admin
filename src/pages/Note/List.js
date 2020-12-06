@@ -98,6 +98,24 @@ export default class List extends React.Component {
       })
     });
   };
+  publish = async noteID => {
+    await this.props.dispatch({
+      type:  "/note/publish",
+      payload: {
+        noteID: noteID
+      }
+    });
+    await this.fetch();
+  };
+  hide = async noteID => {
+    await this.props.dispatch({
+      type:  "/note/hide",
+      payload: {
+        noteID: noteID
+      }
+    });
+    await this.fetch();
+  };
   del = async noteID => {
     await this.props.dispatch({
       type: "/note/del",
@@ -153,6 +171,20 @@ export default class List extends React.Component {
         render: (val, data) => (
           <Fragment>
             <a onClick={this.mod.bind(this, data.noteID)}>修改</a>
+            <Divider type="vertical" />
+            <Popconfirm
+              title="确定发布该笔记?"
+              onConfirm={this.publish.bind(this, data.noteID)}
+            >
+              <a>发布</a>
+            </Popconfirm>
+            <Divider type="vertical" />
+            <Popconfirm
+              title="确定隐藏该笔记?"
+              onConfirm={this.hide.bind(this, data.noteID)}
+            >
+              <a>隐藏</a>
+            </Popconfirm>
             <Divider type="vertical" />
             <Popconfirm
               title="确定删除该笔记?"

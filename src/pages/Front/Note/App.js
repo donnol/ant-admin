@@ -15,7 +15,7 @@ export default class App extends React.Component {
     console.log("constructor");
 
     // 初始化state对象
-    this.state = cache.get("/note/page") || {
+    this.state = cache.get("/front/page") || {
       list: [],
       where: {},
       limit: {
@@ -34,7 +34,7 @@ export default class App extends React.Component {
       count: undefined
     };
     let data = await this.props.dispatch({
-      type: "/note/page",
+      type: "/note/frontPage",
       payload: {
         ...limit,
       }
@@ -75,7 +75,10 @@ export default class App extends React.Component {
       );
     };
 
-    let list = this.state.list;
+    let list = [];
+    if (this.state.list) {
+      list = this.state.list;
+    }
     let count = list.length;
     let total = this.state.limit.count;
     return (

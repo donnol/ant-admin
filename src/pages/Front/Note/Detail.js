@@ -17,20 +17,20 @@ export default class Detail extends React.Component {
                 noteID: query.noteID
             };
         } else {
-            this.state = cache.get("/note/detail") || {
+            this.state = cache.get("/front/detail") || {
                 data: {}
             };
         }
     }
     componentDidUpdate = () => {
         if (!this.state.noteID) {
-            cache.set("/note/detail", this.state);
+            cache.set("/front/detail", this.state);
         }
     };
     componentDidMount = async () => {
         if (this.state.noteID) {
             let data = await this.props.dispatch({
-                type: "/note/get",
+                type: "/note/front",
                 payload: {
                     noteID: this.state.noteID
                 }
