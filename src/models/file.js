@@ -15,6 +15,7 @@ export default {
       return await request("/v1/file", {
         method: "POST",
         body: payload,
+        isUploadFile: true,
         autoCheck: true
       });
     },

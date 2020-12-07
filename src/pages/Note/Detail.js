@@ -38,11 +38,11 @@ export default class Detail extends React.Component {
       html: true,
       linkify: true,
       typographer: true,
-      highlight: function(str, lang) {
+      highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
           try {
             return hljs.highlight(lang, str).value;
-          } catch (__) {}
+          } catch (__) { }
         }
         return ""; // use external default escaping
       }
@@ -63,8 +63,9 @@ export default class Detail extends React.Component {
       cache.set("/note/detail", this.state);
     }
   };
-  onChange = data => {
-    this.state.data = data;
+  onChange = (data) => {
+    // 只更新标题，详情由handleEditorChange负责更新
+    this.state.data.title = data.title;
     this.setState({});
   };
   componentDidMount = async () => {
@@ -79,24 +80,28 @@ export default class Detail extends React.Component {
     }
     this.setState({});
   };
-  handleEditorChange = ({ html, md }) => {
-    console.log("handleEditorChange", html, md);
-  };
-  uploadFile = async (url, data) => {
-    const formData  = new FormData();
-  
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {},
-      body: formData
-    });
-  
-    console.log(response)
+  renderHTML = (text) => {
+    // 模拟异步渲染Markdown
+    return new Promise((resolve) => {
+      resolve(this.mdParser.render(text))
+    })
   }
-  handleImageUpload(file, callback) {
+  handleEditorChange = (data) => {
+    // console.log("handleEditorChange", "text:", data.text, "html:", data.html);
+    // 负责更新详情
+    this.state.data.detail = data.text;
+    this.setState({});
+  };
+  uploadFile = async (formData) => {
+    return await this.props.dispatch({
+      type: "/file/add",
+      payload: formData
+    });
+  }
+  handleImageUpload = (file, callback) => {
     const reader = new FileReader()
-    reader.onload = () => {      
-      const convertBase64UrlToBlob = (urlData) => {  
+    reader.onload = async () => {
+      const convertBase64UrlToBlob = (urlData) => {
         let arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1]
         let bstr = atob(arr[1])
         let n = bstr.length
@@ -104,44 +109,20 @@ export default class Detail extends React.Component {
         while (n--) {
           u8arr[n] = bstr.charCodeAt(n)
         }
-        return new Blob([u8arr], {type:mime})
+        return new Blob([u8arr], { type: mime })
       }
-      console.log("file:",file, "file.File:", file.File)
       const blob = convertBase64UrlToBlob(reader.result)
-      console.log("blob:", blob)
 
-      var id = 9;
-      const url = "http://localhost:8080/v1/file"
-
-      let formData  = new FormData();
+      let formData = new FormData();
       formData.append("file1", blob, file.name)
 
-      // fetch介绍：https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          // 如果添加下面的Content-Type header，后端会报错：multipart: NextPart: bufio: buffer full
-          // From https://stackoverflow.com/questions/25493706/ajax-upload-file-to-golang-server-with-content-type-multipart
-          // 'Content-Type': 'multipart/form-data; charset=utf-8; boundary=dbfdfd2232bb'
-        },
-        body: formData
-      })
-        .then(response => {
-          let data = response.json();
-          console.log("response:", response, "body:", data)
-          return data
-        })
-        .then(function(myJson) {
-          console.log("myJson:",myJson, "data:", myJson.data);
-          id = myJson.data.id;
-          console.log("id:", id);
+      let data = await this.uploadFile(formData)
 
-          // 当异步上传获取图片地址后，执行calback回调（参数为imageUrl字符串），即可将图片地址写入markdown
-          callback('http://localhost:8080/v1/file?id=' + id);
-        })
-        .catch(error => {
-          console.error(error)
-        });
+      // 拼接链接（要借助后端返回path，并且要统一拼接格式）
+      let link = data.path + '?id=' + data.id
+
+      // 当异步上传获取图片地址后，执行calback回调（参数为imageUrl字符串），即可将图片地址写入markdown
+      callback(link);
     }
     reader.readAsDataURL(file)
   }
@@ -189,7 +170,7 @@ export default class Detail extends React.Component {
             <div style={{ height: "500px" }}>
               <MdEditor
                 value={detail}
-                renderHTML={text => this.mdParser.render(text)}
+                renderHTML={this.renderHTML}
                 onChange={this.handleEditorChange}
                 onImageUpload={this.handleImageUpload}
                 config={{

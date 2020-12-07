@@ -46,13 +46,15 @@ export default async function request(url, options) {
     credentials: "include"
   };
   const newOptions = { ...defaultOptions, ...options };
-  if (newOptions.method === "POST" || newOptions.method === "PUT") {
-    newOptions.headers = {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-      ...newOptions.headers
-    };
-    newOptions.body = JSON.stringify(newOptions.body);
+  if (!newOptions.isUploadFile) { // 文件上传时不需要设置
+    if (newOptions.method === "POST" || newOptions.method === "PUT") {
+      newOptions.headers = {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        ...newOptions.headers
+      };
+      newOptions.body = JSON.stringify(newOptions.body);
+    }
   }
   if (newOptions.query) {
     let query = qs.stringify(newOptions.query);
