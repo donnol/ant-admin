@@ -57,12 +57,7 @@ export default async function request(url, options) {
     }
   }
   if (newOptions.query) {
-    let query = qs.stringify(newOptions.query);
-    if (url.indexOf("?") != -1) {
-      url += "&" + query;
-    } else {
-      url += "?" + query;
-    }
+    url = addUrlQuery(url, newOptions.query);
   }
   let response = await fetch(url, newOptions);
   if (newOptions.autoCheck) {
@@ -79,4 +74,14 @@ export default async function request(url, options) {
   } else {
     return data;
   }
+}
+
+export function addUrlQuery(url, payload) {
+  let query = qs.stringify(payload);
+  if (url.indexOf("?") != -1) {
+    url += "&" + query;
+  } else {
+    url += "?" + query;
+  }
+  return url
 }

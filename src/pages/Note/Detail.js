@@ -98,6 +98,12 @@ export default class Detail extends React.Component {
       payload: formData
     });
   }
+  getFileLink = async (id) => {
+    return await this.props.dispatch({
+      type: "/file/getLink",
+      payload: { id: id }
+    });
+  }
   handleImageUpload = (file, callback) => {
     const reader = new FileReader()
     reader.onload = async () => {
@@ -118,8 +124,8 @@ export default class Detail extends React.Component {
 
       let data = await this.uploadFile(formData)
 
-      // 拼接链接（要借助后端返回path，并且要统一拼接格式）
-      let link = data.path + '?id=' + data.id
+      // 拼接链接
+      let link = await this.getFileLink(data.id)
 
       // 当异步上传获取图片地址后，执行calback回调（参数为imageUrl字符串），即可将图片地址写入markdown
       callback(link);
