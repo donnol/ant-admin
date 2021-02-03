@@ -33,6 +33,7 @@
     "bizcharts": "^3.5.5",
     "braft-editor": "^2.3.7",
     "classname": "0.0.0",
+    "dayjs": "^1.10.4",
     "highlight.js": "^9.15.9",
     "html2canvas": "^1.0.0-alpha.12",
     "image-compressor.js": "^1.1.4",

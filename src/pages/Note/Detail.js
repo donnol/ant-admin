@@ -1,6 +1,6 @@
 import StandardForm from "@/components/StandardForm";
 import cache from "@/utils/cache";
-import { Input } from "antd";
+import { Input, Button, notification } from "antd";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import MarkdownIt from "markdown-it";
@@ -17,6 +17,7 @@ import qs from "qs";
 import React from "react";
 import MdEditor from "react-markdown-editor-lite";
 import { connect } from "redva";
+import dayjs from "dayjs";
 
 @connect()
 export default class Detail extends React.Component {
@@ -133,6 +134,11 @@ export default class Detail extends React.Component {
     reader.readAsDataURL(file)
   }
   onSubmit = async () => {
+    await this.handleSaveContent()
+
+    this.props.history.go(-1);
+  };
+  handleSaveContent = async () => {
     if (this.state.noteID) {
       await this.props.dispatch({
         type: "/note/mod",
@@ -149,9 +155,25 @@ export default class Detail extends React.Component {
       this.state.data = {};
       this.componentDidUpdate();
     }
-    this.props.history.go(-1);
+
+    // 通知
+    this.notifyAfterSave()
+  }
+  notifyAfterSave = () => {
+    let d = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    notification.open({
+      message: '笔记保存成功',
+      description:
+        '笔记保存成功：' + d + '。',
+      duration: 2,
+      style: { backgroundColor: "rgba(205, 205, 125, 75)" },
+      onClick: () => {
+        console.log('确定!');
+      },
+    });
   };
   render = () => {
+    let title = String(this.state.data.title);
     let detail = String(this.state.data.detail);
 
     let columns = [
@@ -162,7 +184,9 @@ export default class Detail extends React.Component {
         wrapperCol: { span: 20 },
         rules: [{ required: true }],
         render: () => {
-          return <Input placeholder="请输入" />;
+          return <div>
+            <Input placeholder="请输入" value={title}></Input>
+          </div>;
         }
       },
       {
@@ -194,16 +218,26 @@ export default class Detail extends React.Component {
       }
     ];
     return (
-      <StandardForm
-        ref={node => {
-          this.form = node;
-        }}
-        columns={columns}
-        data={this.state.data}
-        onChange={this.onChange}
-        submitCol={{ span: 22, offset: 2 }}
-        onSubmit={this.onSubmit}
-      />
+      <div>
+        <div>
+          <Button
+            onClick={this.handleSaveContent}
+            style={{ marginBottom: "10px", textAlign: "center", backgroundColor: "rgba(225, 125, 75, 75)", width: "fit-content" }}
+          >
+            保存内容（保存后不会跳回列表页）
+        </Button>
+        </div>
+        <StandardForm
+          ref={node => {
+            this.form = node;
+          }}
+          columns={columns}
+          data={this.state.data}
+          onChange={this.onChange}
+          submitCol={{ span: 22, offset: 2 }}
+          onSubmit={this.onSubmit}
+        />
+      </div>
     );
   };
 }
